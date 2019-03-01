@@ -1,0 +1,91 @@
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+public class E02_DarkestDungeon {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        String[] inputList = scanner.nextLine().split("[|]");
+        int rooms = 0;
+
+        int currentHealth = 100;
+        int coins = 0;
+
+        for (int i = 0; i < inputList.length; i++) {
+            ++rooms;
+            String command = inputList[i];
+
+            if (currentHealth <= 0){
+                return;
+            }
+
+            if (command.contains("potion")){
+                currentHealth = heal(command, currentHealth);
+            } else if (command.contains("chest")){
+                coins = findChest(command, coins);
+            } else{
+                currentHealth = fightMonster(command, currentHealth, rooms);
+            }
+
+        }
+
+
+        System.out.printf("You've made it!\n" +
+                "Coins: %d\n" +
+                "Health: %d\n", coins, currentHealth);
+
+    }
+
+    private static int fightMonster(String command, int currentHealth, int rooms) {
+        List<String> inputCommand = Arrays.stream(command.split(" ")).collect(Collectors.toList());
+        int monsterStrength = Integer.parseInt(inputCommand.get(1));
+        String monsterName = inputCommand.get(0);
+
+        if (currentHealth - monsterStrength > 0){
+            currentHealth -= monsterStrength;
+            System.out.printf("You slayed %s.%n", monsterName);
+            return currentHealth;
+        } else {
+            currentHealth -= monsterStrength;
+            System.out.printf("You died! Killed by %s.%n" +
+                    "Best room: %d%n", monsterName, rooms);
+            return currentHealth;
+        }
+
+
+
+    }
+
+    private static int findChest(String command, int coins) {
+        List<String> inputCommand = Arrays.stream(command.split(" ")).collect(Collectors.toList());
+        int coinsInChest = Integer.parseInt(inputCommand.get(1));
+        coins += coinsInChest;
+        System.out.printf("You found %d coins.%n", coinsInChest);
+        return coins;
+    }
+
+    private static int heal(String command, int currentHealth) {
+        List<String> inputCommand = Arrays.stream(command.split(" ")).collect(Collectors.toList());
+        int potionHealth = Integer.parseInt(inputCommand.get(1));
+
+        if (potionHealth + currentHealth <= 100){
+            currentHealth += potionHealth;
+        } else {
+
+            int neededHealth = 100 - currentHealth;
+            currentHealth = 100;
+
+            System.out.printf("You healed for %d hp.%n", neededHealth);
+            System.out.printf("Current health: %d hp.%n", currentHealth);
+            return currentHealth;
+        }
+
+
+        System.out.printf("You healed for %d hp.%n", potionHealth);
+        System.out.printf("Current health: %d hp.%n", currentHealth);
+
+        return currentHealth;
+    }
+}
