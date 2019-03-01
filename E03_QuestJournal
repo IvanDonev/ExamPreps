@@ -1,0 +1,96 @@
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+public class E03_QuestJournal {
+    public static void main (String[] args){
+        Scanner scanner = new Scanner(System.in);
+
+        List<String> inputQuests = Arrays.stream(scanner.nextLine().split(", ")).collect(Collectors.toList());
+
+        String command = scanner.nextLine();
+
+        while (!"Retire!".equalsIgnoreCase(command)){
+
+            if (command.contains("Start")){
+                addNonExistingQuest(command, inputQuests);
+            } else if (command.contains("Complete")){
+                removeExistingQuest(command, inputQuests);
+            } else if (command.contains("Side Quest")){
+                addSideQuestToList(command, inputQuests);
+            } else if (command.contains("Renew")){
+                addQuestsToTheBack(command, inputQuests);
+            }
+
+
+
+            command = scanner.nextLine();
+        }
+
+        System.out.println(inputQuests.toString().replaceAll("\\[|\\]|\\s+", " ").trim());
+
+
+    }
+
+    private static void addQuestsToTheBack(String command, List<String> inputQuests) {
+        List<String> commandList = Arrays.stream(command.split(" - ")).collect(Collectors.toList());
+        int indexOfQuest;
+
+
+        if (inputQuests.contains(commandList.get(1))){
+
+            indexOfQuest = inputQuests.indexOf(commandList.get(1));
+            inputQuests.add(commandList.get(1));
+            inputQuests.remove(indexOfQuest);
+        }
+
+    }
+
+    private static void addSideQuestToList(String command, List<String> inputQuests) {
+        List<String> initialList = Arrays.stream(command.split(" - ")).collect(Collectors.toList());
+        initialList.remove(0);
+
+        List<String> completeCommand = Arrays.stream(initialList.toString().split("\\[|,|\\]|\\:")).collect(Collectors.toList());
+        completeCommand.remove(0);
+
+        while (completeCommand.contains(" ")){
+            int indexOfSpace = completeCommand.indexOf(" ");
+            completeCommand.remove(indexOfSpace);
+        }
+
+        int indexOfQuest = 0;
+
+//        if (!inputQuests.contains(completeCommand.get(0))){
+//            inputQuests.add(completeCommand.get(0));
+//        }
+
+        if (inputQuests.contains(completeCommand.get(0))){
+            indexOfQuest = inputQuests.indexOf(completeCommand.get(0));
+        }
+
+        if (!inputQuests.contains(completeCommand.get(1))){
+            inputQuests.add(indexOfQuest + 1, completeCommand.get(1));
+        }
+
+    }
+
+    private static void removeExistingQuest(String command, List<String> inputQuests) {
+        List<String> inputCommand = Arrays.stream(command.split(" - ")).collect(Collectors.toList());
+        if (inputQuests.contains(inputCommand.get(1))){
+            inputQuests.remove(inputCommand.get(1));
+        }
+
+    }
+
+    private static void addNonExistingQuest(String command, List<String> inputQuests) {
+        List<String> inputCommand = Arrays.stream(command.split(" - ")).collect(Collectors.toList());
+
+        if (inputQuests.contains(inputCommand.get(1))){
+            return;
+        } else {
+            inputQuests.add(inputCommand.get(1));
+        }
+
+    }
+}
