@@ -1,0 +1,60 @@
+
+
+import java.util.Scanner;
+
+public class E03_CookingFactory {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        String command = scanner.nextLine();
+        int bestBatchSum = 0;
+        int averageSum = 0;
+        int length = 0;
+        String bestBatch = "";
+
+
+        while (!command.equalsIgnoreCase("Bake it!")){
+            String[] commandInputToString = command.split("#");
+
+            int currSum = 0;
+            int currAverageSum = 0;
+            int currLength = 0;
+
+            for (int i = 0; i <commandInputToString.length; i++) {
+                int currentNumber = Integer.parseInt(commandInputToString[i]);
+                currSum += currentNumber;
+            }
+
+            currAverageSum = currSum / commandInputToString.length;
+            currLength = commandInputToString.length;
+
+            if (currSum > bestBatchSum){
+                bestBatchSum = currSum;
+                bestBatch = String.join(" ", commandInputToString);
+                averageSum = currAverageSum;
+                length = currLength;
+            } else if (currSum == bestBatchSum){
+                if (currAverageSum > averageSum){
+                    bestBatchSum = currSum;
+                    bestBatch = String.join(" ", commandInputToString);
+                    averageSum = currAverageSum;
+                    length = currLength;
+                } else if (currAverageSum == averageSum){
+                    if (currLength < length){
+                        bestBatchSum = currSum;
+                        bestBatch = String.join(" ", commandInputToString);
+                        averageSum = currAverageSum;
+                        length = currLength;
+                    }
+                }
+            }
+
+            command = scanner.nextLine();
+
+        }
+
+        System.out.printf("Best Batch quality: %d\n" +
+                "%s", bestBatchSum, bestBatch);
+
+    }
+}
