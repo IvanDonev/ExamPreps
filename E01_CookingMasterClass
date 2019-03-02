@@ -1,0 +1,37 @@
+import java.util.Scanner;
+
+public class E01_CookingMasterclass {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        double budget = Double.parseDouble(scanner.nextLine());
+        int students = Integer.parseInt(scanner.nextLine());
+
+        double priceOfFlour = Double.parseDouble(scanner.nextLine());
+        double priceOfEggs = Double.parseDouble(scanner.nextLine());
+        double priceOfApron = Double.parseDouble(scanner.nextLine());
+
+        int freeFlour = 0;
+
+        if (students >= 5){
+            freeFlour = students / 5;
+        }
+
+        int totalFlourNeeded = students - freeFlour;
+
+
+        double totalSumNeeded = priceOfApron * (Math.ceil(students * 1.20));
+        totalSumNeeded += (priceOfEggs * 10) * students;
+        totalSumNeeded += totalFlourNeeded * priceOfFlour;
+
+        if (budget >= totalSumNeeded){
+            System.out.printf("Items purchased for %.2f$.", totalSumNeeded);
+        } else {
+            double difference = budget - totalSumNeeded;
+            System.out.printf("%.2f$ more needed.", Math.abs(difference));
+
+        }
+
+
+    }
+}
