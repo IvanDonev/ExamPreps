@@ -1,0 +1,92 @@
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+public class E02_SantasList {
+    public static void main (String[] args){
+        Scanner scanner = new Scanner(System.in);
+
+        List<String> noisyKidsLists = Arrays.stream(scanner.nextLine().split("&")).collect(Collectors.toList());
+
+        String command = scanner.nextLine();
+
+
+        while(!"Finished!".equalsIgnoreCase(command)){
+
+            if (command.contains("Bad")){
+                addToThebegining(command, noisyKidsLists);
+            } else if (command.contains("Good")){
+                removeFromList(command, noisyKidsLists);
+            } else if (command.contains("Rename")){
+                renameKidInTheList(command, noisyKidsLists);
+            } else if (command.contains("Rearrange")){
+                rearrangeKidInTheList(command, noisyKidsLists);
+            }
+
+            command = scanner.nextLine();
+        }
+
+        System.out.println(noisyKidsLists.toString().replaceAll("\\[|\\]", "").trim());
+
+
+
+    }
+
+    private static void rearrangeKidInTheList(String command, List<String> noisyKidsLists) {
+        String[] commandToArray = command.split(" ");
+        String kidName = commandToArray[1];
+        int kidIndex = 0;
+
+
+        if (!noisyKidsLists.contains(kidName)){
+            return;
+        } else {
+          kidIndex = noisyKidsLists.indexOf(kidName);
+            noisyKidsLists.add(kidName);
+            noisyKidsLists.remove(kidIndex);
+        }
+
+
+    }
+
+    private static void renameKidInTheList(String command, List<String> noisyKidsLists) {
+        String[] commandToArray = command.split(" ");
+        String kidName = commandToArray[1];
+
+        String newKidName = commandToArray[2];
+        int oldKidIndex = 0;
+
+        if (!noisyKidsLists.contains(kidName)){
+            return;
+        } else {
+           oldKidIndex = noisyKidsLists.indexOf(kidName);
+            noisyKidsLists.set(oldKidIndex, newKidName);
+        }
+
+
+    }
+
+    private static void removeFromList(String command, List<String> noisyKidsLists) {
+        String[] commandToArray = command.split(" ");
+        String kidName = commandToArray[1];
+
+        if (!noisyKidsLists.contains(kidName)){
+            return;
+        } else {
+            noisyKidsLists.remove(kidName);
+        }
+
+    }
+
+    private static void addToThebegining(String command, List<String> noisyKidsLists) {
+        String[] commandToArray = command.split(" ");
+        String kidName = commandToArray[1];
+
+        if (noisyKidsLists.contains(kidName)){
+            return;
+        } else {
+            noisyKidsLists.add(0, kidName);
+        }
+    }
+}
