@@ -1,0 +1,147 @@
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+public class E10_SoftUniCoursePlanning {
+    public static void main (String[] args){
+        Scanner scanner = new Scanner(System.in);
+
+
+        List<String> inputSchedule = Arrays.stream(scanner.nextLine().split(", "))
+                                    .collect(Collectors.toList());
+
+
+        String command = scanner.nextLine();
+
+
+        while(!"course start".equalsIgnoreCase(command)){
+            String[] data = command.split(":");
+            String commandType = data[0];
+            String lessonTitle = data[1];
+
+
+            if (commandType.contains("Add")){
+                addLessonToSchedule (lessonTitle, inputSchedule);
+            } else if (commandType.contains("Insert")){
+                int index = Integer.parseInt(data[2]);
+                insertLessonToSchedule(lessonTitle, index, inputSchedule);
+            } else if (commandType.contains("Remove")){
+                removeLessonFromSchedule(lessonTitle, inputSchedule);
+            } else if (commandType.contains("Swap")){
+                String swapTitle = data[2];
+                swapLessonFromSchedule(lessonTitle, swapTitle, inputSchedule);
+            } else if (commandType.contains("Exercise")){
+                addExerciseToSchedule(commandType, lessonTitle, inputSchedule);
+            }
+
+
+
+
+            command = scanner.nextLine();
+        }
+
+        int count = 1;
+        for (int i = 0; i < inputSchedule.size(); i++) {
+
+            System.out.printf("%d.%s%n", count, inputSchedule.get(i));
+
+
+            count++;
+        }
+    }
+
+    private static void addExerciseToSchedule(String commandType, String lessonTitle, List<String> inputSchedule) {
+        String excerSiseTitle = lessonTitle + "-" + commandType;
+
+
+        if (inputSchedule.contains(lessonTitle)){
+            int indexOfLesson = inputSchedule.indexOf(lessonTitle);
+
+            if (!inputSchedule.get(indexOfLesson + 1).equals(excerSiseTitle)){
+                inputSchedule.add(indexOfLesson + 1, excerSiseTitle);
+            }
+        } else {
+            inputSchedule.add(lessonTitle);
+            inputSchedule.add(inputSchedule.size() - 1, excerSiseTitle);
+        }
+
+
+    }
+
+    private static void swapLessonFromSchedule(String lessonTitle, String swapTitle, List<String> inputSchedule) {
+        String exercisesTest = lessonTitle + "-Exercise";
+        String swapExersiseTest = swapTitle +"-Exercise";
+
+
+        if (inputSchedule.contains(lessonTitle) && inputSchedule.contains(swapTitle)){
+            int firstIndex = inputSchedule.indexOf(lessonTitle);
+            int secondIndex = inputSchedule.indexOf(swapTitle);
+
+            String firstIndexLesson = inputSchedule.get(firstIndex);
+
+            inputSchedule.set(firstIndex, inputSchedule.get(secondIndex));
+            inputSchedule.set(secondIndex, firstIndexLesson);
+        }
+
+        if (inputSchedule.contains(exercisesTest)){
+            int indexOf = inputSchedule.indexOf(lessonTitle);
+            int indexOfExercise = inputSchedule.indexOf(exercisesTest);
+            String currentString = inputSchedule.get(indexOfExercise);
+
+            inputSchedule.remove(exercisesTest);
+
+
+            inputSchedule.add(indexOf + 1, currentString);
+        }
+
+        if (inputSchedule.contains(swapExersiseTest)){
+            int indexOf = inputSchedule.indexOf(swapTitle);
+            int indexOfExercise = inputSchedule.indexOf(swapExersiseTest);
+            String currentString = inputSchedule.get(indexOfExercise);
+
+            inputSchedule.remove(swapExersiseTest);
+
+
+            inputSchedule.add(indexOf + 1, currentString);
+        }
+
+    }
+
+    private static void removeLessonFromSchedule(String lessonTitle, List<String> inputSchedule) {
+        String exercisesTest = lessonTitle + "-Exercise";
+
+        if (inputSchedule.contains(exercisesTest)){
+           inputSchedule.remove(lessonTitle);
+           inputSchedule.remove(exercisesTest);
+        }
+
+
+        if (inputSchedule.contains(lessonTitle)){
+            inputSchedule.remove(lessonTitle);
+        }
+
+    }
+
+    private static void insertLessonToSchedule(String lessonTitle, int index, List<String> inputSchedule) {
+
+        if (inputSchedule.contains(lessonTitle)){
+
+        } else {
+            inputSchedule.add(index, lessonTitle);
+        }
+
+    }
+
+    private static void addLessonToSchedule(String lessonTitle, List<String> inputSchedule) {
+        if (inputSchedule.contains(lessonTitle)){
+
+        } else {
+            inputSchedule.add(lessonTitle);
+        }
+
+    }
+}
+
+
+// 88 out of 100
