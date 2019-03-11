@@ -1,0 +1,109 @@
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+public class E03_LastStop {
+    public static void main (String[] args){
+        Scanner scanner = new Scanner(System.in);
+
+
+
+        List<Integer> numberOfPaintings = Arrays.stream(scanner.nextLine().split("\\s+"))
+                                            .map(Integer::parseInt)
+                                            .collect(Collectors.toList());
+
+
+        String command = scanner.nextLine();
+
+        while (!"END".equalsIgnoreCase(command)){
+
+            // -	Insert {place} {paintingNumber} – insert the painting (paintingNumber) on the next place after the given one, if it exists.
+
+            if (command.contains("Insert")){
+                insertPainting(command, numberOfPaintings);
+            } else if (command.contains("Switch")){
+                switchPaintings(command, numberOfPaintings);
+            } else if (command.contains("Hide")){
+                hidePainting(command, numberOfPaintings);
+            } else if (command.contains("Reverse")){
+                reverseOrderOfPaintings(numberOfPaintings);
+            } else if (command.contains("Change")){
+                changeValueOfPainting(command, numberOfPaintings);
+            }
+
+
+
+            command = scanner.nextLine();
+        }
+
+        for (int i = 0; i <numberOfPaintings.size(); i++) {
+            System.out.printf("%d ", numberOfPaintings.get(i));
+        }
+
+
+    }
+
+    private static void reverseOrderOfPaintings(List<Integer> numberOfPaintings) {
+        Collections.reverse(numberOfPaintings);
+    }
+
+    private static void changeValueOfPainting(String command, List<Integer> numberOfPaintings) {
+        String[] commandSplit = command.split("\\s+");
+        int valueToBeChanged = Integer.parseInt(commandSplit[1]);
+        int newValue = Integer.parseInt(commandSplit[2]);
+
+        if (numberOfPaintings.contains(valueToBeChanged)){
+            int indexOfOldValue = numberOfPaintings.indexOf(valueToBeChanged);
+            numberOfPaintings.set(indexOfOldValue, newValue);
+        }
+
+
+
+    }
+
+    private static void hidePainting(String command, List<Integer> numberOfPaintings) {
+        String[] commandSplit = command.split("\\s+");
+
+        int paintingToHide = Integer.parseInt(commandSplit[1]);
+
+        if (numberOfPaintings.contains(paintingToHide)){
+           int indexToRemove = numberOfPaintings.indexOf(paintingToHide);
+           numberOfPaintings.remove(indexToRemove);
+        }
+
+    }
+
+    private static void switchPaintings(String command, List<Integer> numberOfPaintings) {
+        String[] commandSplit = command.split("\\s+");
+
+        int firstPainting = Integer.parseInt(commandSplit[1]);
+        int secondPainting = Integer.parseInt(commandSplit[2]);
+
+        if (numberOfPaintings.contains(firstPainting) && numberOfPaintings.contains(secondPainting)){
+            int indexOfFirstPainting = numberOfPaintings.indexOf(firstPainting);
+            int indexOfSecondPainting = numberOfPaintings.indexOf(secondPainting);
+
+            numberOfPaintings.set(indexOfFirstPainting, secondPainting);
+            numberOfPaintings.set(indexOfSecondPainting, firstPainting);
+
+        }
+
+
+
+
+    }
+
+    private static void insertPainting(String command, List<Integer> numberOfPaintings) {
+        String[] commandSplit = command.split("\\s+");
+        int insertIndex = Integer.parseInt(commandSplit[1]);
+        // needs to be right after it!
+        insertIndex += 1;
+
+        if (insertIndex < numberOfPaintings.size()){
+            numberOfPaintings.add(insertIndex, Integer.parseInt(commandSplit[2]));
+        }
+
+    }
+}
