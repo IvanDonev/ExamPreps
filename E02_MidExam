@@ -1,0 +1,118 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+
+public class E02 {
+
+
+    static double budget;
+    static double profit;
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+
+        String[] inputList = scanner.nextLine().split("[|]");
+        budget = Double.parseDouble(scanner.nextLine());
+        double initialBudget = budget;
+
+        List<Double> purchasedItems = new ArrayList<>();
+
+
+
+        // Maximum price of items
+
+        // Clothes	50.00
+        //Shoes	35.00
+        //Accessories	20.50
+
+
+
+
+        for (int i = 0; i <inputList.length; i++) {
+            String command = inputList[i];
+
+            if (command.contains("Clothes")) {
+               purchaseItem(command, purchasedItems);
+
+            } else if (command.contains("Shoes")){
+
+                purchaseItem(command, purchasedItems);
+            } else if (command.contains("Accessories")){
+
+                purchaseItem(command, purchasedItems);
+            }
+
+
+        }
+
+
+        if (initialBudget + profit >= 150){
+            for (int i = 0; i <purchasedItems.size(); i++) {
+                System.out.printf("%.2f ",purchasedItems.get(i));
+            }
+            System.out.println();
+            System.out.printf("Profit: %.2f\n" +
+                    "Hello, France!\n", profit);
+        } else {
+            for (int i = 0; i <purchasedItems.size(); i++) {
+                System.out.printf("%.2f ",purchasedItems.get(i));
+            }
+            System.out.println();
+            System.out.printf("Profit: %.2f\n" +
+                    "Time to go.\n", profit);
+        }
+
+
+
+
+
+    }
+
+    private static void purchaseItem(String command, List<Double> purchasedItems) {
+        String[] splitCommand = command.split("->");
+        double priceOfItem = Double.parseDouble(splitCommand[1]);
+
+        double clothesMaximum = 50.00;
+        double shoesMaximum = 35.00;
+        double accessoriesMaximum = 20.50;
+
+        if (splitCommand[0].contains("Clothes")){
+
+          if (priceOfItem > clothesMaximum || priceOfItem > budget){
+              return;
+          } else {
+              double priceIncrease = 0.4 * priceOfItem;
+              profit += priceIncrease;
+              budget -= priceOfItem;
+              priceOfItem += priceIncrease;
+              purchasedItems.add(priceOfItem);
+          }
+
+        }else if (command.contains("Shoes")){
+            if (priceOfItem > shoesMaximum || priceOfItem > budget){
+                return;
+            } else {
+                double priceIncrease = 0.4 * priceOfItem;
+                profit += priceIncrease;
+                budget -= priceOfItem;
+                priceOfItem += priceIncrease;
+                purchasedItems.add(priceOfItem);
+            }
+        } else if (command.contains("Accessories")){
+            if (priceOfItem > accessoriesMaximum || priceOfItem > budget){
+                return;
+            } else {
+                double priceIncrease = 0.4 * priceOfItem;
+                profit += priceIncrease;
+                budget -= priceOfItem;
+                priceOfItem += priceIncrease;
+                purchasedItems.add(priceOfItem);
+            }
+        }
+
+
+
+
+    }
+}
