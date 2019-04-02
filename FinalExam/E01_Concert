@@ -1,0 +1,63 @@
+import java.util.*;
+
+public class E01_Concert {
+    public static void main (String[] args){
+        Scanner scanner = new Scanner(System.in);
+
+        Map<String, Integer> playTime = new LinkedHashMap<>();
+        Map<String, Set<String>> bandRecord = new LinkedHashMap<>();
+
+
+        String input = scanner.nextLine();
+
+        while (!input.equalsIgnoreCase("start of concert")){
+
+            if (input.contains("Play")){
+                String[] playCommand = input.split("; ");
+                String bandName = playCommand[1];
+                int bandTime = Integer.parseInt(playCommand[2]);
+
+                playTime.putIfAbsent(bandName, 0);
+                playTime.put(bandName, playTime.get(bandName) + bandTime);
+
+            } else if (input.contains("Add")){
+                String[] firstSplit = input.split("; ");
+                String neededRow = firstSplit[2];
+                String bandName = firstSplit[1];
+                String[] memberList = neededRow.split(", ");
+
+                bandRecord.putIfAbsent(bandName, new LinkedHashSet<>());
+
+                for (int i = 0; i <memberList.length; i++) {
+                    bandRecord.get(bandName).add(memberList[i]);
+                }
+            }
+
+
+            input = scanner.nextLine();
+        }
+
+        int totalPlayTime = playTime.entrySet().stream().mapToInt(Map.Entry::getValue).sum();
+        System.out.println(String.format("Total time: %d", totalPlayTime));
+
+        playTime.entrySet().stream().sorted((e1, e2) -> {
+            int sort = Integer.compare(e2.getValue(), e1.getValue());
+            if (sort == 0){
+                sort = e1.getKey().compareTo(e2.getKey());
+            }
+            return sort;
+
+        }).forEach(p -> {
+            System.out.println(String.format("%s -> %d", p.getKey(), p.getValue()));
+        });
+
+      String bandInfoToBeDisplayed = scanner.nextLine();
+        System.out.println(bandInfoToBeDisplayed);
+      bandRecord.get(bandInfoToBeDisplayed).stream().forEach(e -> {
+          System.out.println(String.format("=> %s", e));
+
+      });
+
+
+    }
+}
