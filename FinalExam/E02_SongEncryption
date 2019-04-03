@@ -1,0 +1,84 @@
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class E02_SongEncryption {
+    public static void main (String[] args){
+        Scanner scanner = new Scanner(System.in);
+
+        String regex = "(?<artistName>^[A-Z][a-z' ]+):(?<songName>[A-Z ]+)";
+        String command = scanner.nextLine();
+        Pattern pattern = Pattern.compile(regex);
+
+        while (!command.equalsIgnoreCase("end")){
+
+            Matcher matcher = pattern.matcher(command);
+
+            if (matcher.find()){
+                    String bandName = matcher.group("artistName");
+                    String songName = matcher.group("songName");
+
+                    int cryptKey = bandName.length();
+
+                    StringBuilder result = new StringBuilder();
+                    for (int i = 0; i <bandName.length(); i++) {
+                        char currChar = bandName.charAt(i);
+
+                        if (Character.isSpaceChar(currChar)){
+                            result.append(currChar);
+                            continue;
+                        }
+
+                        if (currChar == 39){
+                            result.append(currChar);
+                            continue;
+                        }
+
+                        if (currChar + cryptKey > 122 && Character.isLowerCase(currChar)){
+                            int remainder = (currChar + cryptKey) - 122;
+                            currChar = 96;
+                            currChar += remainder;
+                        } else if (currChar + cryptKey > 90 && Character.isUpperCase(currChar)){
+                            int remainder = (currChar + cryptKey) - 90;
+                            currChar = 64;
+                            currChar += remainder;
+                        } else {
+                            currChar += cryptKey;
+                        }
+
+                        result.append(currChar);
+                    }
+
+                    result.append("@");
+
+                for (int i = 0; i <songName.length(); i++) {
+                    char currChar = songName.charAt(i);
+
+                    if (Character.isSpaceChar(currChar)){
+                        result.append(currChar);
+                        continue;
+                    } else if (currChar + cryptKey > 90 && Character.isUpperCase(currChar)){
+                        int remainder = (currChar + cryptKey) - 90;
+                        currChar = 64;
+                        currChar += remainder;
+                    } else {
+                        currChar += cryptKey;
+                    }
+
+                    result.append(currChar);
+                }
+                System.out.println(String.format("Successful encryption: %s", result));
+
+            } else {
+                System.out.println("Invalid input!");
+            }
+
+
+            command = scanner.nextLine();
+        }
+
+
+
+
+    }
+}
