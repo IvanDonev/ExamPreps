@@ -1,0 +1,64 @@
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class E10_SoftUniExamResults {
+    public static void main (String[] args){
+        Scanner scanner = new Scanner(System.in);
+
+        Map<String, Integer> examResults = new LinkedHashMap<>();
+        Map<String, Integer> submissions = new LinkedHashMap<>();
+
+        String command = scanner.nextLine();
+
+        while (!command.equalsIgnoreCase("exam finished")){
+            String[] inputString = command.split("-");
+
+            if (command.contains("banned")){
+                banStudent(examResults, command);
+                command = scanner.nextLine();
+                continue;
+            }
+
+            examResults.putIfAbsent(inputString[0], 0);
+
+               if (examResults.get(inputString[0]) < Integer.parseInt(inputString[2])){
+                   examResults.put(inputString[0], Integer.parseInt(inputString[2]));
+               }
+
+
+               submissions.putIfAbsent(inputString[1], 0);
+               submissions.put(inputString[1], submissions.get(inputString[1]) + 1);
+
+
+               command = scanner.nextLine();
+        }
+
+        System.out.println("Results:");
+       examResults.entrySet().stream().sorted((p1, p2) -> {
+           int sort = Integer.compare(p2.getValue(), p1.getValue());
+           if (sort == 0){
+               sort = p1.getKey().compareTo(p2.getKey());
+           }
+           return sort;
+       }).forEach(e -> System.out.println(String.format("%s | %d", e.getKey(), e.getValue())));
+
+        System.out.println("Submissions:");
+
+        submissions.entrySet().stream().sorted((p1, p2) -> {
+            int sort = Integer.compare(p2.getValue(), p1.getValue());
+            if (sort == 0){
+                sort = p1.getKey().compareTo(p2.getKey());
+            }
+            return sort;
+        }).forEach(e -> System.out.println(String.format("%s - %d", e.getKey(), e.getValue())));
+
+    }
+
+    private static void banStudent(Map<String, Integer> examResults, String command) {
+        String[] inputCommands = command.split("-");
+        String studentName = inputCommands[0];
+
+        examResults.remove(studentName);
+    }
+}
