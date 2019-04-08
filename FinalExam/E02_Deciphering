@@ -1,0 +1,40 @@
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class E02_Deciphering {
+    public static void main (String[] args){
+        Scanner scanner = new Scanner(System.in);
+
+        String cypheredText = scanner.nextLine();
+        String twoSubstrings = scanner.nextLine();
+
+        StringBuilder decipheredText = new StringBuilder();
+
+
+        for (int i = 0; i <cypheredText.length(); i++) {
+            char currChar = cypheredText.charAt(i);
+            currChar -= 3;
+
+            decipheredText.append(currChar);
+        }
+
+        String[] eachSubstring = twoSubstrings.split("\\s+");
+        String result = decipheredText.toString();
+        result= result.replaceAll(eachSubstring[0], eachSubstring[1]);
+
+        Pattern validation = Pattern.compile("^[D-Za-z{}|# ]+$");
+        Matcher matcher = validation.matcher(result);
+
+        if (matcher.find()){
+            System.out.println(matcher.group());
+        } else {
+            System.out.println("This is not the book you are looking for.");
+        }
+
+
+
+
+
+    }
+}
