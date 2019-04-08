@@ -1,0 +1,56 @@
+import java.util.LinkedHashSet;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeMap;
+
+public class E01_Dictionary {
+    public static void main (String[] args){
+        Scanner scanner = new Scanner(System.in);
+
+        String wordsAndDefinitions = scanner.nextLine();
+        String toBePrinted = scanner.nextLine();
+        String command = scanner.nextLine();
+
+        TreeMap<String, Set<String>> dictionary = new TreeMap<>();
+
+        String[] splitByWholeWords = wordsAndDefinitions.split(" \\| ");
+
+        for (int i = 0; i <splitByWholeWords.length; i++) {
+            String[] eachWord = splitByWholeWords[i].split(": ");
+
+            dictionary.putIfAbsent(eachWord[0], new LinkedHashSet<>());
+            dictionary.get(eachWord[0]).add(eachWord[1]);
+
+        }
+
+        String[] wordToBePrinted = toBePrinted.split(" \\| ");
+        for (int i = 0; i <wordToBePrinted.length; i++) {
+
+            if (dictionary.containsKey(wordToBePrinted[i])){
+                System.out.println(wordToBePrinted[i]);
+                dictionary.get(wordToBePrinted[i]).stream().sorted((p1, p2) -> {
+
+                    int p1Length = p1.length();
+                    int p2Length = p2.length();
+
+                    int sort = Integer.compare(p2Length, p1Length);
+                    return sort;
+
+                }).forEach(e -> {
+                    System.out.println(String.format("-%s", e));
+                });
+            }
+
+        }
+
+        if (command.equals("List")){
+            dictionary.entrySet().forEach(e -> {
+                System.out.printf("%s ", e.getKey());
+            });
+        }
+
+    }
+}
+
+
+100/100
