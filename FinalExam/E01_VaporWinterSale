@@ -1,0 +1,82 @@
+package finalExamPrep;
+
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class E01_VaporWinterSale {
+    public static void main (String[] args){
+        Scanner scanner = new Scanner(System.in);
+
+        Map<String, Double> gameAndPrice = new LinkedHashMap<>();
+        Map<String, String> gameAndDLC = new LinkedHashMap<>();
+
+
+        String[] input = scanner.nextLine().split(", ");
+
+        for (int i = 0; i < input.length; i++) {
+            if (input[i].contains("-")){
+                addGameWithPrice(input[i], gameAndPrice);
+            } else if (input[i].contains(":")){
+                addDlcIfGameExist(input[i], gameAndPrice, gameAndDLC);
+            }
+        }
+
+
+     gameAndPrice.entrySet().forEach(e -> {
+
+         if (gameAndDLC.containsKey(e.getKey())){
+             gameAndPrice.put(e.getKey(), e.getValue() / 2);
+         } else {
+             gameAndPrice.put(e.getKey(), e.getValue() * 0.80);
+         }
+     });
+
+
+       gameAndPrice.entrySet().stream().filter(e -> {
+           boolean containsDLC = false;
+           if (gameAndDLC.containsKey(e.getKey())){
+               containsDLC = true;
+           }
+           return containsDLC;
+       }).sorted(Comparator.comparingDouble(Map.Entry::getValue))
+               .forEach(p -> System.out.println(String.format("%s - %s - %.2f",p.getKey(), gameAndDLC.get(p.getKey()), p.getValue())));
+
+        gameAndPrice.entrySet().stream().filter(e -> {
+            boolean doesNotContainDLC = false;
+            if (!gameAndDLC.containsKey(e.getKey())){
+                doesNotContainDLC = true;
+            }
+            return doesNotContainDLC;
+        }).sorted((e1, e2) -> Double.compare(e2.getValue(), e1.getValue()))
+                .forEach(p -> System.out.println(String.format("%s - %.2f", p.getKey(), p.getValue())));
+
+
+
+
+    }
+
+    private static void addDlcIfGameExist(String s, Map<String, Double> gameAndPrice, Map<String, String> gameAndDLC) {
+        String[] gameWithDLC = s.split(":");
+        String gameName = gameWithDLC[0];
+        String dlcName = gameWithDLC[1];
+
+        if (gameAndPrice.containsKey(gameName)){
+            gameAndDLC.put(gameName, dlcName);
+            double priceIncrease = gameAndPrice.get(gameName) * 0.20;
+            gameAndPrice.put(gameName, gameAndPrice.get(gameName) + priceIncrease);
+        }
+
+    }
+
+    private static void addGameWithPrice(String s, Map<String, Double> gameAndPrice) {
+        String[] gameWithPrice = s.split("-");
+        String gameName = gameWithPrice[0];
+        double gamePrice = Double.parseDouble(gameWithPrice[1]);
+        gameAndPrice.putIfAbsent(gameName, 0.0);
+        gameAndPrice.put(gameName, gameAndPrice.get(gameName) + gamePrice);
+    }
+
+
+}
