@@ -1,0 +1,59 @@
+package finalExamPrep;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class E02_ActivationKeys {
+    public static void main(String[] args){
+        Scanner scanner = new Scanner(System.in);
+
+        String[] inputKeys = scanner.nextLine().split("&");
+        String regex = "^[A-Za-z0-9]{16,25}$";
+        Pattern pattern = Pattern.compile(regex);
+
+        List<String> validKeys = new ArrayList<>();
+
+        for (int i = 0; i <inputKeys.length; i++) {
+            Matcher matcher = pattern.matcher(inputKeys[i]);
+            while (matcher.find()){
+                validKeys.add(matcher.group());
+            }
+        }
+
+        for (int i = 0; i < validKeys.size(); i++) {
+            StringBuilder currKey = new StringBuilder(validKeys.get(i));
+
+            for (int j = 0; j <currKey.length(); j++) {
+                if (Character.isDigit(currKey.charAt(j))){
+                    int currInt = Integer.parseInt(String.valueOf(currKey.charAt(j)));
+                    currInt = 9 - currInt;
+                    String currChar = String.valueOf(currInt);
+                    currKey.setCharAt(j, currChar.charAt(0));
+                }
+            }
+
+            if (currKey.length() == 25){
+               currKey.insert(5, '-');
+               currKey.insert(11, '-');
+               currKey.insert(17, '-');
+               currKey.insert(23, '-');
+            } else {
+                currKey.insert(4, '-');
+                currKey.insert(9, '-');
+                currKey.insert(14, '-');
+
+            }
+
+
+            validKeys.set(i, currKey.toString().toUpperCase());
+        }
+
+        System.out.println(validKeys.toString().replaceAll("\\[| |\\]", " ").trim());
+
+
+
+    }
+}
