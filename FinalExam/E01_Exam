@@ -1,0 +1,59 @@
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class E01 {
+    public static void main (String[] args){
+        Scanner scanner = new Scanner(System.in);
+
+        String regex = "^(?<peakName>[A-Za-z!@#$?0-9]+)=(?<geoLength>[\\d]+)<<(.*)$";
+
+        String input = scanner.nextLine();
+        Pattern pattern = Pattern.compile(regex);
+
+        while (!input.equals("Last note")){
+        Matcher matcher = pattern.matcher(input);
+        boolean notFound = true;
+
+        while (matcher.matches()){
+            int geoLength = Integer.parseInt(matcher.group("geoLength"));
+            int group3Length = matcher.group(3).length();
+
+            String cordinates = matcher.group(3);
+
+            if (geoLength == group3Length){
+                String regexSecond = "[A-Za-z]+";
+                Pattern secondMatch = Pattern.compile(regexSecond);
+                StringBuilder peakName = new StringBuilder();
+
+                String[] inputSplit = input.split("=");
+
+                Matcher splitMatcher = secondMatch.matcher(inputSplit[0]);
+
+                while (splitMatcher.find()){
+                    String currMatch = splitMatcher.group();
+                    peakName.append(currMatch);
+                }
+                System.out.println(String.format("Coordinates found! %s -> %s", peakName.toString(), cordinates));
+                notFound = false;
+                break;
+
+            } else {
+                break;
+            }
+
+        }
+
+        if (notFound){
+            System.out.println("Nothing found!");
+        }
+
+
+
+        input = scanner.nextLine();
+        }
+
+
+
+    }
+}
